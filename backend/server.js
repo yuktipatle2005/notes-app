@@ -1,7 +1,8 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenv").config();
 
 const app = express();
 
@@ -9,48 +10,78 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
+console.log("URI:", process.env.MONGO_URI);
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("DB Connected"))
-  .catch(err => console.log(err));
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+  .then(() => console.log("✅ DB Connected"))
+  .catch(err => console.log("❌ DB Error:", err));
 
+// Model
 const Note = require("./models/Note");
 
-//create
+// ================= ROUTES =================
+
+// CREATE
 app.post("/notes", async (req, res) => {
-  const note = new Note(req.body);
-  await note.save();
-  res.json(note);
+  try {
+    const note = new Note(req.body);
+    await note.save();
+    res.json(note);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-//read
+// READ
 app.get("/notes", async (req, res) => {
-  const notes = await Note.find().sort({ createdAt: -1 });
-  res.json(notes);
+  try {
+    const notes = await Note.find().sort({ createdAt: -1 });
+    res.json(notes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-//update
+// UPDATE
 app.put("/notes/:id", async (req, res) => {
-  const updated = await Note.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true }
-  );
-  res.json(updated);
+  try {
+    const updated = await Note.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-//delete 
+// DELETE
 app.delete("/notes/:id", async (req, res) => {
-  await Note.findByIdAndDelete(req.params.id);
-  res.json({ message: "Deleted" });
+  try {
+    await Note.findByIdAndDelete(req.params.id);
+    res.json({ message: "Deleted" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-//search
+// SEARCH
 app.get("/notes/search", async (req, res) => {
-  const q = req.query.q;
-  const notes = await Note.find({
-    title: { $regex: q, $options: "i" }
-  });
-  res.json(notes);
+  try {
+    const q = req.query.q;
+    const notes = await Note.find({
+      title: { $regex: q, $options: "i" }
+    });
+    res.json(notes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ================= SERVER =================
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on ${PORT}`);
 });

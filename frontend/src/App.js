@@ -8,7 +8,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
 
-  const API = "https://fullstack-notes-app-twis.onrender.com";
+  const API = "http://localhost:5000";
 
   // Fetch Notes
   const fetchNotes = async () => {
@@ -208,3 +208,35 @@ const styles = {
 };
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
