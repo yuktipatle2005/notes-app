@@ -8,10 +8,9 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect("mongodb://127.0.0.1:27017/notesDB")
-.then(() => console.log("DB Connected"))
-.catch(err => console.log(err));
-
+mongoose.connect("mongodb+srv://yukti:12345@cluster0.xxxxx.mongodb.net/notesDB")
+  .then(() => console.log("DB Connected"))
+  .catch(err => console.log(err));
 app.listen(5000, () => console.log("Server running on 5000"));
 
 const Note = require("./models/Note");
