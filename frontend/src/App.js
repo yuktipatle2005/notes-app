@@ -8,7 +8,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
 
-  const API = "http://localhost:5000";
+  const API = "https://notes-app-vsnn.onrender.com";
 
   // Fetch Notes
   const fetchNotes = async () => {
